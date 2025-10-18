@@ -1,2 +1,3 @@
-start: python pubmed_bot.py
+start: bash start.sh
+
 
