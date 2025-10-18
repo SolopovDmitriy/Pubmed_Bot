@@ -102,9 +102,9 @@ async def get_days(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # === Основна функція ===
 def main():
-    TOKEN = os.getenv("BOT_TOKEN")
+    TOKEN = os.getenv("TELEGRAM_TOKEN")
     if not TOKEN:
-        raise ValueError("❌ BOT_TOKEN не знайдено! Додай його у Railway → Variables")
+        raise ValueError("❌ TELEGRAM_TOKEN не знайдено! Додай його у Railway → Variables")
 
     app = ApplicationBuilder().token(TOKEN).build()
 
