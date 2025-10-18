@@ -1,0 +1,8 @@
+python-telegram-bot==21.3
+requests
+pandas
+python-docx
+aiohttp
+biopython
+
+
