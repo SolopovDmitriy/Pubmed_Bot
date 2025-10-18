@@ -12,10 +12,7 @@ from docx import Document
 # === Вкажи свій email для PubMed ===
 Entrez.email = "your_email@example.com"
 
-# === Токен Telegram ===
-TOKEN = "7713734185:AAHgxPigjTbZAoPNxdToXCITdovNI4FEpM4"
-
-# Етапи діалогу
+# === Етапи діалогу ===
 ASK_KEYWORDS, ASK_DAYS = range(2)
 
 # === Пошук у PubMed ===
@@ -56,12 +53,10 @@ def format_vancouver(entry):
 
 # === Збереження у файли ===
 def save_results(results):
-    # CSV
     df = pd.DataFrame(results)
     csv_file = "results.csv"
     df.to_csv(csv_file, index=False)
 
-    # Word
     doc = Document()
     doc.add_heading("PubMed Search Results (Vancouver Style)", level=1)
     for i, r in enumerate(results, 1):
@@ -102,12 +97,15 @@ async def get_days(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_document(open(csv_file, "rb"))
         await update.message.reply_document(open(docx_file, "rb"))
 
-    # Повертаємось до пошуку без /start
     await update.message.reply_text("🔁 Надішли нові ключові слова або /start для початку.")
     return ASK_KEYWORDS
 
 # === Основна функція ===
 def main():
+    TOKEN = os.getenv("BOT_TOKEN")
+    if not TOKEN:
+        raise ValueError("❌ BOT_TOKEN не знайдено! Додай його у Railway → Variables")
+
     app = ApplicationBuilder().token(TOKEN).build()
 
     conv_handler = ConversationHandler(
@@ -120,8 +118,24 @@ def main():
     )
 
     app.add_handler(conv_handler)
-    print("✅ Бот запущено. Очікує запити...")
-    app.run_polling()
 
+    # === Автоматичне налаштування режиму запуску ===
+    port = int(os.environ.get("PORT", 8080))
+    url = os.environ.get("RAILWAY_STATIC_URL")
+
+    if url:
+        webhook_url = f"https://{url}/webhook"
+        print(f"✅ Встановлюю webhook: {webhook_url}")
+        app.run_webhook(
+            listen="0.0.0.0",
+            port=port,
+            url_path="/webhook",
+            webhook_url=webhook_url
+        )
+    else:
+        print("⚙️ Webhook не знайдено, запуск локально через polling...")
+        app.run_polling()
+
+# === Точка входу ===
 if __name__ == "__main__":
     main()
