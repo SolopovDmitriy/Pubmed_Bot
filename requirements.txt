@@ -4,5 +4,6 @@ pandas
 python-docx
 aiohttp
 biopython
+python-dotenv
 
 
