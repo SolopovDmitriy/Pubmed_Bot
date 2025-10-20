@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# Environment
+.env
+*.env
+
+# System
+.DS_Store
+Thumbs.db
+
+# Local files
+search_log.txt
+results.csv
+results.docx
+search_results.csv

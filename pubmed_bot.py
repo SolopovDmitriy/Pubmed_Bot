@@ -8,6 +8,10 @@ from telegram.ext import (
 from Bio import Entrez, Medline
 import pandas as pd
 from docx import Document
+from dotenv import load_dotenv
+load_dotenv()
+
+
 
 # === Вкажи свій email для PubMed ===
 Entrez.email = "your_email@example.com"
